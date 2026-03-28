@@ -20,22 +20,31 @@ Quick scope assessment (~30 seconds of exploration):
 - Which packages/subdirs are touched?
 - Single file, single package, or cross-package?
 - Any CLI entry points, arguments, or data paths changing?
+- How ambiguous is the request? Could reasonable engineers disagree on approach?
 
 Classify and tell the user:
 
-| Class | Criteria | Plan location |
-|-------|----------|---------------|
-| **Small** | 1–3 files, single package, no API changes | Skip Step 2 only — all other steps (worktree, test, checkpoints) still apply |
-| **Single-session** | Contained feature/fix within one package | `.omc/plans/` |
-| **Multi-session** | Cross-package, multi-phase, or architectural | `docs/plans/<date>-<name>.md` + `.omc/plans/` |
+| Class | Criteria | Planning approach | Plan location |
+|-------|----------|-------------------|---------------|
+| **Small** | 1–3 files, single package, no API changes | `/omc-plan --direct` — skip interview, describe approach inline | Skip plan file — approach stated in Checkpoint 1 |
+| **Single-session** | Contained feature/fix within one package | `/omc-plan --interactive` — thorough interview before planning | `.omc/plans/` |
+| **Multi-session** | Cross-package, multi-phase, or architectural | `/omc-plan --interactive --consensus` — interview + planner/architect/critic loop | `docs/plans/<date>-<name>.md` + `.omc/plans/` |
 
-Present classification with reasoning. User can override.
+Present classification with reasoning. User can override class or planning approach.
 
 ## Step 2 — Plan
 
-**Small tasks:** skip this step. Go to Step 3 and describe intended approach inline. Do NOT skip Steps 3–10 — worktree, test, commit, and checkpoints still apply even for small tasks.
+**IMPORTANT: Always use `/omc-plan` for planning. Never use Claude Code's built-in plan mode (`EnterPlanMode`).**
 
-**Single-session / multi-session:** run `/omc-plan --interactive`. For multi-session or high-complexity (critical paths, architectural changes), ask whether to escalate to `--consensus`.
+Run `/omc-plan` with flags determined by triage:
+
+- **Small:** `/omc-plan --direct` with the task description. Go to Step 3 with the generated approach. Do NOT skip Steps 3–10 — worktree, test, commit, and checkpoints still apply.
+- **Single-session:** `/omc-plan --interactive` — the planner agent will conduct a thorough interview (one question at a time, gathering codebase facts before asking) to resolve ambiguity before producing a plan.
+- **Multi-session:** `/omc-plan --interactive --consensus` — interview first, then planner/architect/critic deliberation loop until agreement.
+
+**Offering consensus escalation:** For any class, if the task touches critical paths, has multiple viable approaches, or the user seems uncertain, ask:
+
+> This could benefit from consensus planning (planner + architect + critic review loop). Want to upgrade to `--consensus`?
 
 **Multi-session only — produce both:**
 1. **Roadmap** → `docs/plans/<YYYY-MM-DD>-<name>.md` — full scope, phases, dependencies, acceptance criteria per phase
@@ -48,6 +57,7 @@ Present the plan (or for small tasks, intended approach). User options:
 1. **Approve** → Step 4
 2. **Request changes** → revise plan, re-present
 3. **Request further review** → solicit critique, re-present
+4. **Peer review** → `/peer-plan-review` — delegate review to an external model (Gemini, Codex, Cursor, or Claude), then re-present options with their feedback
 
 ## Step 4 — Execute
 
