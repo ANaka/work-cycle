@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "clean-work-cycle",
+  "description": "Structured plan-to-ship development workflows with explicit checkpoints",
+  "owner": {
+    "name": "ANaka"
+  },
+  "plugins": [
+    {
+      "name": "clean-work-cycle",
+      "description": "Structured plan-to-ship development workflows with explicit checkpoints",
+      "version": "1.0.0",
+      "author": {
+        "name": "ANaka"
+      },
+      "source": "./",
+      "category": "development",
+      "homepage": "https://github.com/ANaka/clean-work-cycle",
+      "tags": [
+        "workflow",
+        "pr-review",
+        "worktree",
+        "plan-execute"
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}
