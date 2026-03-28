@@ -1,11 +1,28 @@
-# Clean Work Cycle
+# Work Cycle
 
 A Claude Code plugin for structured **Plan-Do-Review-Renew** development workflows.
 
 Every task follows the same cycle — triage, plan, execute in isolation, test, review, ship, and decide what's next. Explicit checkpoints keep you in control.
 
+## What's in it
+
+### Skills (auto-invoked by Claude)
+
+- **plan-do-review-renew** — Full cycle with explicit checkpoints: triage, plan, execute (in isolated worktree), test, commit, PR, and merge. Adapts to task size — small tasks skip formal planning but still go through every gate.
+- **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary.
+
+### Commands (user-invoked)
+
+| Command | Description |
+|---------|-------------|
+| `/work-cycle:plan-execute-review-renew` | Invoke the plan-do-review-renew skill |
+| `/work-cycle:review-pr` | Invoke pr-review-fix on a PR |
+| `/work-cycle:peer-pr-review` | Delegate PR review to an external model (Gemini, Codex, Cursor, or Claude) |
+
+### The Cycle
+
 ```mermaid
-graph LR
+graph TD
     A[Triage] --> B[Plan]
     B --> C{Checkpoint 1\nApprove plan}
     C --> D[Execute\nin worktree]
@@ -18,21 +35,6 @@ graph LR
     I -->|Continue| D
     I -->|Done| J[Cleanup]
 ```
-
-## What's in it
-
-### Skills (auto-invoked by Claude)
-
-- **work-cycle** — Full Plan-Do-Review-Renew cycle with explicit checkpoints: triage, plan, execute (in isolated worktree), test, commit, PR, and merge. Adapts to task size — small tasks skip formal planning but still go through every gate.
-- **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary.
-
-### Commands (user-invoked)
-
-| Command | Description |
-|---------|-------------|
-| `/work-cycle:plan-execute-review-renew` | Invoke the work-cycle skill |
-| `/work-cycle:review-pr` | Invoke pr-review-fix on a PR |
-| `/work-cycle:peer-pr-review` | Delegate PR review to an external model (Gemini, Codex, Cursor, or Claude) |
 
 ## Install
 
