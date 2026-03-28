@@ -1,7 +1,0 @@
-{
-  "tool_name": "Read",
-  "tool_input_preview": "{\"file_path\":\"/Users/alexandernaka/.claude/plugins/marketplaces/claude-plugins-official/.claude-plugin/marketplace.json\"}",
-  "error": "File content (17672 tokens) exceeds maximum allowed tokens (10000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
-  "timestamp": "2026-03-28T20:28:19.607Z",
-  "retry_count": 1
-}

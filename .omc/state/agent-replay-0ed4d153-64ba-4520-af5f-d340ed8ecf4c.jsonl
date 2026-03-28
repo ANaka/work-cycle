@@ -1,5 +1,0 @@
-{"t":0,"agent":"a37e21a","agent_type":"claude-code-guide","event":"agent_start","parent_mode":"none"}
-{"t":0,"agent":"a37e21a","agent_type":"claude-code-guide","event":"agent_stop","success":true,"duration_ms":10689}
-{"t":0,"agent":"a6936f9","agent_type":"claude-code-guide","event":"agent_start","parent_mode":"none"}
-{"t":0,"agent":"a6936f9","agent_type":"claude-code-guide","event":"agent_stop","success":true,"duration_ms":24148}
-{"t":0,"agent":"system","event":"skill_invoked","skill_name":"plugin-dev:plugin-structure"}
