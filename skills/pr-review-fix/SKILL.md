@@ -9,7 +9,7 @@ Review an open PR, fix issues directly, push, and comment. Default behavior is f
 
 ## Terminology
 
-Uses the same definitions as `work-cycle`:
+Uses the same definitions as `plan-do-review-renew`:
 
 **sync** — sync local repo `main` to remote `main` (`git checkout main && git pull`). If continuing in a worktree, also sync the worktree's local `main` reference.
 
@@ -30,7 +30,7 @@ gh pr checks <number>
 Accept PR number, URL, or infer from current branch. Then:
 
 1. Run **check** to fetch full PR state
-2. Extract the worktree path from the PR body (work-cycle puts `Worktree: <path>` in PR descriptions)
+2. Extract the worktree path from the PR body (plan-do-review-renew puts `Worktree: <path>` in PR descriptions)
 3. If no worktree path in PR body, check `git worktree list` for a worktree on the PR's head branch
 4. If no worktree found, fall back to **comment-only mode** (skip Step 3, go straight to Step 4 after review)
 
@@ -134,7 +134,7 @@ After pushing fixes, re-read the diff to check:
 
 If clean (no new issues, no deferred Critical/Important findings), present options:
 
-1. **`mergesync`** — merge the PR now, sync (only offer when invoked standalone, not from within work-cycle)
+1. **`mergesync`** — merge the PR now, sync (only offer when invoked standalone, not from within plan-do-review-renew)
 2. **`done`** — leave PR open, report what was done
 3. **`another-pass`** — run Steps 2–5 again (e.g. if fixes were complex)
 

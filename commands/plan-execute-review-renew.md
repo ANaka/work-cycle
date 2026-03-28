@@ -1,7 +1,7 @@
 ---
-description: Invoke the work-cycle skill — full plan-triage-execute-test-ship workflow with explicit checkpoints
+description: Invoke the plan-do-review-renew skill — full plan-triage-execute-test-ship workflow with explicit checkpoints
 ---
 
-Invoke the `work-cycle` skill with the following task:
+Invoke the `plan-do-review-renew` skill with the following task:
 
 $ARGUMENTS

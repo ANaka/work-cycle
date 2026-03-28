@@ -1,5 +1,5 @@
 ---
-name: work-cycle
+name: plan-do-review-renew
 description: Use when the user gives any implementation task — bug fix, feature, refactor, or multi-phase project. Triages scope first — small tasks skip formal planning but still go through worktree, test, and checkpoint gates; larger tasks add planning and review phases.
 ---
 
