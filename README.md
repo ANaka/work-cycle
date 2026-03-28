@@ -1,12 +1,29 @@
 # Clean Work Cycle
 
-A Claude Code plugin for structured plan-to-ship development workflows.
+A Claude Code plugin for structured **Plan-Do-Review-Renew** development workflows.
+
+Every task follows the same cycle — triage, plan, execute in isolation, test, review, ship, and decide what's next. Explicit checkpoints keep you in control.
+
+```mermaid
+graph LR
+    A[Triage] --> B[Plan]
+    B --> C{Checkpoint 1\nApprove plan}
+    C --> D[Execute\nin worktree]
+    D --> E[Test]
+    E --> F[Commit]
+    F --> G{Checkpoint 2\nPR strategy}
+    G --> H[Review &\nFix loop]
+    H --> I{Checkpoint 3\nContinue?}
+    I -->|New task| A
+    I -->|Continue| D
+    I -->|Done| J[Cleanup]
+```
 
 ## What's in it
 
 ### Skills (auto-invoked by Claude)
 
-- **clean-work-cycle** — Full dev cycle with explicit checkpoints: triage, plan, execute (in isolated worktree), test, commit, PR, and merge. Adapts to task size.
+- **clean-work-cycle** — Full Plan-Do-Review-Renew cycle with explicit checkpoints: triage, plan, execute (in isolated worktree), test, commit, PR, and merge. Adapts to task size — small tasks skip formal planning but still go through every gate.
 - **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary.
 
 ### Commands (user-invoked)
