@@ -1,11 +1,11 @@
 ---
 name: plan-do-review-renew
-description: Use when the user gives any implementation task — bug fix, feature, refactor, or multi-phase project. Triages scope first — small tasks skip formal planning but still go through worktree, test, and checkpoint gates; larger tasks add planning and review phases.
+description: Use when the user gives any implementation task — bug fix, feature, refactor, or multi-phase project. Triages scope first, then brainstorms design before planning. Even small tasks get an assumption check. Larger tasks add full design exploration, planning, and review phases.
 ---
 
 # Clean Work Cycle
 
-Plan-to-ship cycle with three explicit user checkpoints: plan review, PR strategy, and continuation.
+Brainstorm-plan-ship cycle with three explicit user checkpoints: plan review, PR strategy, and continuation.
 
 ## Terminology
 
@@ -32,34 +32,102 @@ Classify and tell the user:
 
 Present classification with reasoning. User can override class or planning approach.
 
-## Step 2 — Plan
+## Step 2 — Brainstorm
+
+Examine assumptions and explore the design space *before* planning implementation. Depth scales with the triage class. Even simple tasks benefit — "simple" is where unexamined assumptions waste the most work.
+
+### Small: Quick Assumption Check (~30 seconds)
+
+State three things and present them to the user for confirmation or correction:
+
+1. **What I think the task is** — one sentence restating the goal
+2. **How I'd approach it** — the intended change (files, logic)
+3. **What I'm assuming** — constraints, scope boundaries, things I'm *not* changing
+
+> **Assumption check:**
+> - Task: [restate]
+> - Approach: [describe]
+> - Assuming: [list]
+>
+> Does this match your intent, or should I adjust?
+
+User confirms → proceed to Step 3. User corrects → update and re-present.
+
+### Single-session: Full Design Exploration
+
+Explore the design space before committing to an approach:
+
+1. **Clarifying questions** — ask one at a time. Gather codebase facts (read code, check patterns) *before* asking the user about them. Only ask the user for preferences, scope decisions, and constraints.
+2. **Propose 2–3 approaches** — for each, describe the approach in 1–2 sentences, list pros and cons, and note trade-offs. Present one at a time, get the user's reaction before presenting the next.
+3. **Recommend** — after discussing approaches, state your recommendation with rationale.
+4. **Design brief** — produce an inline summary:
+   - **Goal:** one sentence
+   - **Chosen approach:** what and why
+   - **Alternatives considered:** what was rejected and why
+   - **Assumptions:** what we're taking as given
+   - **Open questions:** anything unresolved (ideally none)
+
+### Multi-session: Deep Design Exploration
+
+Same as single-session, plus:
+
+- Explore **architecture implications** — how the change fits into the broader system, interface boundaries, dependency impacts
+- Consider **phase decomposition** — which parts can ship independently, what order reduces risk
+- Identify **cross-cutting concerns** — shared types, migration paths, backwards compatibility
+
+### Self-Review Checklist (all classes)
+
+Before proceeding to planning, run this checklist inline:
+
+- [ ] **Unexamined assumptions?** — anything taken for granted that could be wrong
+- [ ] **Scope creep?** — anything beyond what was actually requested
+- [ ] **Ambiguity?** — requirements that could reasonably be interpreted two ways
+- [ ] **Contradictions?** — tension between stated goals and chosen approach
+- [ ] **Missing constraints?** — performance, compatibility, security, or other concerns not yet addressed
+
+Flag any issues found. Resolve with the user before proceeding.
+
+## Step 3 — Plan
 
 **IMPORTANT: Always use `/omc-plan` for planning. Never use Claude Code's built-in plan mode (`EnterPlanMode`).**
 
+Pass the design brief from Step 2 as context to `/omc-plan` so the planner doesn't re-ask resolved questions.
+
 Run `/omc-plan` with flags determined by triage:
 
-- **Small:** `/omc-plan --direct` with the task description. Go to Step 3 with the generated approach. Do NOT skip Steps 3–10 — worktree, test, commit, and checkpoints still apply.
-- **Single-session:** `/omc-plan --interactive` — the planner agent will conduct a thorough interview (one question at a time, gathering codebase facts before asking) to resolve ambiguity before producing a plan.
-- **Multi-session:** `/omc-plan --interactive --consensus` — interview first, then planner/architect/critic deliberation loop until agreement.
+- **Small:** `/omc-plan --direct` with the task description and assumption check. Go to Step 4 with the generated approach. Do NOT skip Steps 4–11 — worktree, test, commit, and checkpoints still apply.
+- **Single-session:** `/omc-plan --interactive` with the design brief as context — the planner should build on the design decisions already made, not restart the interview from scratch.
+- **Multi-session:** `/omc-plan --interactive --consensus` with the design brief as context — interview focuses on implementation details, then planner/architect/critic deliberation loop until agreement.
 
 **Offering consensus escalation:** For any class, if the task touches critical paths, has multiple viable approaches, or the user seems uncertain, ask:
 
 > This could benefit from consensus planning (planner + architect + critic review loop). Want to upgrade to `--consensus`?
 
+**No-placeholders rule:** Plans must be concrete and actionable. Flag any of these before proceeding to Checkpoint 1:
+
+- "TBD", "TODO", "implement later", "fill in details"
+- "Add appropriate error handling" / "add validation" / "handle edge cases"
+- "Write tests for the above" without specifying what to test
+- "Similar to Task N" instead of repeating the actual steps
+- Steps that describe *what* to do without showing *how*
+- References to undefined types, functions, or methods
+
+If the plan contains placeholders, send it back to `/omc-plan` with specific feedback on what needs to be concrete.
+
 **Multi-session only — produce both:**
 1. **Roadmap** → `docs/plans/<YYYY-MM-DD>-<name>.md` — full scope, phases, dependencies, acceptance criteria per phase
 2. **Session plan** → `.omc/plans/` — current phase only
 
-## Step 3 — Checkpoint 1: Plan Review
+## Step 4 — Checkpoint 1: Plan Review
 
-Present the plan (or for small tasks, intended approach). User options:
+Present the design brief (from Step 2) and the plan together. User options:
 
-1. **Approve** → Step 4
+1. **Approve** → Step 5
 2. **Request changes** → revise plan, re-present
 3. **Request further review** → solicit critique, re-present
 4. **Peer review** → `/peer-plan-review` — delegate review to an external model (Gemini, Codex, Cursor, or Claude), then re-present options with their feedback
 
-## Step 4 — Execute
+## Step 5 — Execute
 
 Signpost before proceeding:
 
@@ -69,7 +137,7 @@ Always use an isolated worktree unless the user explicitly says otherwise (e.g. 
 
 Then: `EnterWorktree` → execute (direct for small tasks, `/team` for single/multi-session).
 
-## Step 5 — Test
+## Step 6 — Test
 
 Run the relevant test suite:
 
@@ -82,7 +150,7 @@ cd <package> && uv run pytest tests/ -x
 
 If tests fail: diagnose, fix, re-run. Do not proceed with failing tests.
 
-## Step 6 — Doc Check
+## Step 7 — Doc Check
 
 Check before shipping — update in the same branch if needed:
 
@@ -93,7 +161,7 @@ Check before shipping — update in the same branch if needed:
 
 Tell the user what you updated (or "no doc changes needed").
 
-## Step 7 — Commit
+## Step 8 — Commit
 
 Stage and commit all changes from execution, test fixes, and doc updates. All work should be committed before proceeding to PR strategy.
 
@@ -102,26 +170,26 @@ git add <changed-files>
 git commit -m "<conventional commit message>"
 ```
 
-If there are multiple logical changes, use multiple commits. The branch should be clean (no uncommitted changes) before Step 8.
+If there are multiple logical changes, use multiple commits. The branch should be clean (no uncommitted changes) before Step 9.
 
-## Step 8 — Checkpoint 2: PR Strategy
+## Step 9 — Checkpoint 2: PR Strategy
 
 > Branch: `<branch-name>` | Worktree: `<path>` | Changes committed, ready to push.
 
 Present options:
 
-1. **`open-pr`** — push branch, open PR, enter check loop (Step 9) (default)
-2. **`open-pr-review`** — push + PR + `/review-pr`, Claude reviews and fixes, then check loop (Step 9). Note: when invoked from here, `/review-pr` should end with `done` (not `mergesync`) — mergesync is handled by Step 9.
-3. **`open-pr-peer-review`** — push + PR + `/peer-pr-review`, external model reviews (ask which: 1. gemini, 2. codex, 3. cursor, 4. claude), then await completion (see below) and enter check loop (Step 9)
-4. **`push-mergesync`** — push + PR + mergesync immediately (no review, no check loop); then Step 10
+1. **`open-pr`** — push branch, open PR, enter check loop (Step 10) (default)
+2. **`open-pr-review`** — push + PR + `/review-pr`, Claude reviews and fixes, then check loop (Step 10). Note: when invoked from here, `/review-pr` should end with `done` (not `mergesync`) — mergesync is handled by Step 10.
+3. **`open-pr-peer-review`** — push + PR + `/peer-pr-review`, external model reviews (ask which: 1. gemini, 2. codex, 3. cursor, 4. claude), then await completion (see below) and enter check loop (Step 10)
+4. **`push-mergesync`** — push + PR + mergesync immediately (no review, no check loop); then Step 11
 
 **PR body must include the worktree path** so reviewers can check out directly:
 
 > Worktree: `<absolute-worktree-path>`
 
-**Awaiting peer review (option 3):** after spawning the worker, poll PR comments every 30s for a `## Review Summary` comment. When found (or worker signals done via `SendMessage`), run a **check** and present Step 9 options.
+**Awaiting peer review (option 3):** after spawning the worker, poll PR comments every 30s for a `## Review Summary` comment. When found (or worker signals done via `SendMessage`), run a **check** and present Step 10 options.
 
-## Step 9 — PR Open: Check Loop
+## Step 10 — PR Open: Check Loop
 
 **"Check"** = fetch ALL of:
 
@@ -137,13 +205,13 @@ Present options:
 
 1. **`check`** — fetch PR state, report, re-present options
 2. **`check-fix`** — fetch, fix in worktree, re-test, commit, push, re-present options
-3. **`check-fix-mergesync`** — fetch, fix in worktree, re-test, commit, push, mergesync; then Step 10
-4. **`mergesync`** — mergesync now (no check); then Step 10
-5. **`abandon`** — close PR (`gh pr close <number>`), leave worktree intact; then Step 10
+3. **`check-fix-mergesync`** — fetch, fix in worktree, re-test, commit, push, mergesync; then Step 11
+4. **`mergesync`** — mergesync now (no check); then Step 11
+5. **`abandon`** — close PR (`gh pr close <number>`), leave worktree intact; then Step 11
 
 Repeat options 1 or 2 until user picks option 3, 4, or 5.
 
-## Step 10 — Continuation
+## Step 11 — Continuation
 
 > Worktree: `<path>` | PR: #`<number>` (merged or closed)
 
@@ -157,4 +225,4 @@ Present options:
 1. Update roadmap in `docs/plans/` — mark phase complete, note scope changes
 2. Write `## Session Notes` in the roadmap: decisions made, approaches tried and rejected, surprising discoveries
 3. Generate next session plan from roadmap into `.omc/plans/`
-4. Present next session plan → loop to Step 3
+4. Present next session plan → loop to Step 4

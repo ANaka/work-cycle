@@ -2,7 +2,7 @@
 
 A Claude Code plugin for structured **Plan-Do-Review-Renew** development workflows.
 
-Every task follows the same cycle — triage, plan, execute in isolation, test, review, ship, and decide what's next. Explicit checkpoints keep you in control.
+Every task follows the same cycle — triage, brainstorm the design, plan, execute in isolation, test, review, ship, and decide what's next. Even small tasks get a quick assumption check before diving in. Explicit checkpoints keep you in control.
 
 ## Install
 
@@ -21,7 +21,7 @@ To pick up changes without restarting, run `/reload-plugins`.
 
 ### Skills (auto-invoked by Claude)
 
-- **plan-do-review-renew** — Full cycle with explicit checkpoints: triage, plan (via `/omc-plan`), execute (in isolated worktree), test, commit, PR, and merge. Triage determines planning depth — small tasks use `--direct`, larger tasks get a thorough interview (`--interactive`), and complex/multi-session work adds consensus review (`--consensus`).
+- **plan-do-review-renew** — Full cycle with explicit checkpoints: triage, brainstorm (assumption check for small tasks, full design exploration for larger ones), plan (via `/omc-plan`), execute (in isolated worktree), test, commit, PR, and merge. Inspired by [superpowers](https://github.com/obra/superpowers) brainstorming philosophy — examine assumptions before committing to an approach.
 - **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary.
 
 ### Commands (user-invoked)
@@ -37,17 +37,18 @@ To pick up changes without restarting, run `/reload-plugins`.
 
 ```mermaid
 graph TD
-    A[Triage] --> B[Plan]
-    B --> C{Checkpoint 1\nApprove plan}
-    C --> D[Execute\nin worktree]
-    D --> E[Test]
-    E --> F[Commit]
-    F --> G{Checkpoint 2\nPR strategy}
-    G --> H[Review &\nFix loop]
-    H --> I{Checkpoint 3\nContinue?}
-    I -->|New task| A
-    I -->|Continue| D
-    I -->|Done| J[Cleanup]
+    A[Triage] --> B[Brainstorm]
+    B --> C[Plan]
+    C --> D{Checkpoint 1\nApprove plan}
+    D --> E[Execute\nin worktree]
+    E --> F[Test]
+    F --> G[Commit]
+    G --> H{Checkpoint 2\nPR strategy}
+    H --> I[Review &\nFix loop]
+    I --> J{Checkpoint 3\nContinue?}
+    J -->|New task| A
+    J -->|Continue| E
+    J -->|Done| K[Cleanup]
 ```
 
 ## Dependencies
