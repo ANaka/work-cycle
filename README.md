@@ -47,7 +47,7 @@ graph TD
     H --> I[Review &\nFix loop]
     I --> J{Checkpoint 3\nContinue?}
     J -->|New task| A
-    J -->|Continue| E
+    J -->|Continue| D
     J -->|Done| K[Cleanup]
 ```
 

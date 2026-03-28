@@ -53,6 +53,8 @@ State three things and present them to the user for confirmation or correction:
 
 User confirms → proceed to Step 3. User corrects → update and re-present.
 
+If the assumption check reveals ambiguity, multiple viable approaches, or more scope than expected, **re-triage upward** to Single-session or Multi-session and run the full design exploration instead.
+
 ### Single-session: Full Design Exploration
 
 Explore the design space before committing to an approach:
@@ -66,6 +68,7 @@ Explore the design space before committing to an approach:
    - **Alternatives considered:** what was rejected and why
    - **Assumptions:** what we're taking as given
    - **Open questions:** anything unresolved (ideally none)
+   - **Verification:** how we'll know it works — specific tests, checks, or expected outcomes
 
 ### Multi-session: Deep Design Exploration
 
@@ -84,6 +87,7 @@ Before proceeding to planning, run this checklist inline:
 - [ ] **Ambiguity?** — requirements that could reasonably be interpreted two ways
 - [ ] **Contradictions?** — tension between stated goals and chosen approach
 - [ ] **Missing constraints?** — performance, compatibility, security, or other concerns not yet addressed
+- [ ] **Verification gap?** — is there a concrete way to confirm the change works (named tests, commands, expected output)?
 
 Flag any issues found. Resolve with the user before proceeding.
 
@@ -120,7 +124,7 @@ If the plan contains placeholders, send it back to `/omc-plan` with specific fee
 
 ## Step 4 — Checkpoint 1: Plan Review
 
-Present the design brief (from Step 2) and the plan together. User options:
+Present the Step 2 output (assumption check for small tasks, or design brief for larger ones) and the plan together. User options:
 
 1. **Approve** → Step 5
 2. **Request changes** → revise plan, re-present
