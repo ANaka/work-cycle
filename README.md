@@ -23,24 +23,24 @@ graph LR
 
 ### Skills (auto-invoked by Claude)
 
-- **clean-work-cycle** — Full Plan-Do-Review-Renew cycle with explicit checkpoints: triage, plan, execute (in isolated worktree), test, commit, PR, and merge. Adapts to task size — small tasks skip formal planning but still go through every gate.
+- **work-cycle** — Full Plan-Do-Review-Renew cycle with explicit checkpoints: triage, plan, execute (in isolated worktree), test, commit, PR, and merge. Adapts to task size — small tasks skip formal planning but still go through every gate.
 - **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary.
 
 ### Commands (user-invoked)
 
 | Command | Description |
 |---------|-------------|
-| `/clean-work-cycle:plan-execute-review-renew` | Invoke the clean-work-cycle skill |
-| `/clean-work-cycle:review-pr` | Invoke pr-review-fix on a PR |
-| `/clean-work-cycle:peer-pr-review` | Delegate PR review to an external model (Gemini, Codex, Cursor, or Claude) |
+| `/work-cycle:plan-execute-review-renew` | Invoke the work-cycle skill |
+| `/work-cycle:review-pr` | Invoke pr-review-fix on a PR |
+| `/work-cycle:peer-pr-review` | Delegate PR review to an external model (Gemini, Codex, Cursor, or Claude) |
 
 ## Install
 
 Add the marketplace and install the plugin from within Claude Code:
 
 ```
-/plugin marketplace add ANaka/clean-work-cycle
-/plugin install clean-work-cycle@clean-work-cycle
+/plugin marketplace add ANaka/work-cycle
+/plugin install work-cycle@work-cycle
 ```
 
 Or browse available plugins interactively with `/plugin` after adding the marketplace.
