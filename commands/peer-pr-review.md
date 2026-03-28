@@ -24,7 +24,7 @@ If the user already specified a model in the arguments (e.g. `/peer-pr-review 16
 Locate the worktree (`git worktree list | grep <PR branch>`) and spawn:
 
 ```bash
-tmux new-window -d -n "review-<number>" "cd <worktree-path> && <cli> 'Review PR #<number>. Read ~/.claude/skills/pr-review-fix/SKILL.md and follow it exactly.'"
+tmux new-window -d -n "review-<number>" "cd <worktree-path> && <cli> 'Review PR #<number>. Read ${CLAUDE_PLUGIN_ROOT}/skills/pr-review-fix/SKILL.md and follow it exactly.'"
 ```
 
 Where `<cli>` is `gemini`, `codex`, `claude`, or `agent -p --trust --force --workspace <worktree-path>` for cursor.

@@ -19,19 +19,16 @@ A Claude Code plugin for structured plan-to-ship development workflows.
 
 ## Install
 
-Add this plugin from a marketplace, or install directly:
+Add the marketplace and install the plugin from within Claude Code:
 
-```bash
-claude plugin add --path https://github.com/ANaka/clean-work-cycle.git
+```
+/plugin marketplace add ANaka/clean-work-cycle
+/plugin install clean-work-cycle@clean-work-cycle
 ```
 
-Or clone and point to it locally:
+Or browse available plugins interactively with `/plugin` after adding the marketplace.
 
-```bash
-git clone https://github.com/ANaka/clean-work-cycle.git ~/.claude/plugins/clean-work-cycle
-```
-
-Then restart Claude Code or run `/reload-plugins`.
+To pick up changes without restarting, run `/reload-plugins`.
 
 ## Dependencies
 
