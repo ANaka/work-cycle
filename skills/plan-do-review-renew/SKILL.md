@@ -21,31 +21,19 @@ Use `notepad_write_priority` to maintain a live checklist. Format — use `[x]` 
 
 ```
 WCYCLE: <task-summary> (<triage-class>)
-[x] 1-Triage  [x] 2-Brainstorm  [x] 3-Plan
-[x] 4-CP:Plan [>] 5-Execute     [ ] 6-Test
+[>] 1-Triage  [ ] 2-Brainstorm  [ ] 3-Plan
+[ ] 4-CP:Plan [ ] 5-Execute     [ ] 6-Test
 [ ] 7-Docs    [ ] 8-Commit      [ ] 9-CP:PR
 [ ] 10-Check  [ ] 11-Continue
-br:<branch> wt:<worktree-path>
 ```
 
-Add `pr:#<number>` and `issue:#<number>` to the last line as they become available. Mark skipped steps `[-]` (e.g. small tasks may skip the plan file). For loops, append `(Rev N)` to the active step.
+Add `br:<branch>`, `wt:<worktree-path>`, `pr:#<number>`, and `issue:#<number>` to the last line as they become available. Mark skipped steps `[-]` (e.g. small tasks may skip the plan file). For loops, append `(Rev N)` to the active step.
 
-**Multi-session only:** also use `state_write` at durable milestones (triage done, plan approved, worktree created, PR opened, PR merged, continuation chosen) to persist across sessions:
-
-```
-state_write mode:"ralph" state:{
-  "workflow": "work_cycle",
-  "step": 5, "step_name": "Execute",
-  "triage_class": "multi-session",
-  "branch": "<branch>",
-  "worktree_path": "<path>",
-  "tracking_issue": <number>,
-  "pr_number": null,
-  "updated_at": "<iso-timestamp>"
-}
-```
+**Multi-session only:** also use `state_write` at durable milestones (triage done, plan approved, worktree created, PR opened, PR merged, continuation chosen) to persist across sessions. Use whichever OMC mode is active (e.g. `ralph` if invoked via ralph, `autopilot` if via autopilot). Include these fields in the `state` object: `workflow` ("work_cycle"), `step`, `step_name`, `triage_class`, `branch`, `worktree_path`, `tracking_issue`, `pr_number`, `updated_at`.
 
 ## Step 1 — Triage
+
+**Initialize the workflow cursor now** — `notepad_write_priority` with the full checklist and `[>] 1-Triage` active. This is the most important write; all subsequent updates build on it.
 
 Quick scope assessment (~30 seconds of exploration):
 
