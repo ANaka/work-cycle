@@ -23,12 +23,16 @@ If the user already specified a model in the arguments (e.g. `/peer-pr-review 16
 
 Locate the worktree (`git worktree list | grep <PR branch>`) and spawn:
 
+Generate a short unique suffix: `SUFFIX=$(date +%s | tail -c 5)`.
+
+The window name is `review-<number>-<worker>-<suffix>` (e.g. `review-1657-gemini-7321`).
+
 ```bash
-tmux new-window -d -n "review-<number>" "cd <worktree-path> && <cli> 'Review PR #<number>. Read ${CLAUDE_PLUGIN_ROOT}/skills/pr-review-fix/SKILL.md and follow it exactly.'"
+tmux new-window -d -n "review-<number>-<worker>-<suffix>" "cd <worktree-path> && <cli> 'Review PR #<number>. Read ${CLAUDE_PLUGIN_ROOT}/skills/pr-review-fix/SKILL.md and follow it exactly.'"
 ```
 
 Where `<cli>` is `gemini`, `codex`, `claude`, or `agent -p --trust --force --model codex-5.3-high --workspace <worktree-path>` for cursor.
 
-Tell the user: "Review spawned in tmux window `review-<number>`. I'll poll for the `## Review Summary` comment on PR #<number>."
+Tell the user: "Review spawned in tmux window `review-<number>-<worker>-<suffix>`. I'll poll for the `## Review Summary` comment on PR #<number>."
 
 Poll PR comments every 30s. When found, report back.

@@ -28,8 +28,12 @@ If the user already specified a model in the arguments (e.g. `/peer-plan-review 
 
 Spawn in a new tmux window:
 
+Generate a short unique suffix: `SUFFIX=$(date +%s | tail -c 5)`.
+
+The window name is `plan-review-<worker>-<suffix>` (e.g. `plan-review-gemini-7321`).
+
 ```bash
-tmux new-window -d -n "plan-review" "<cli> 'Review the plan at <plan-path>. Evaluate it as a senior engineer would:
+tmux new-window -d -n "plan-review-<worker>-<suffix>" "<cli> 'Review the plan at <plan-path>. Evaluate it as a senior engineer would:
 
 1. Are the requirements clear and complete?
 2. Are there missing edge cases or failure modes?
@@ -43,6 +47,6 @@ Output your review as a structured markdown summary with sections: Strengths, Co
 
 Where `<cli>` is `gemini`, `codex`, `claude`, or `agent -p --trust --force --model codex-5.3-high` for cursor.
 
-Tell the user: "Plan review spawned in tmux window `plan-review`. I'll poll for completion."
+Tell the user: "Plan review spawned in tmux window `plan-review-<worker>-<suffix>`. I'll poll for completion."
 
-Poll the tmux window every 15s (`tmux capture-pane -t plan-review -p | tail -5`). When the process exits or output contains `## Verdict`, capture the full output, present it to the user, and return to Checkpoint 1 (Step 3) options.
+Poll the tmux window every 15s (`tmux capture-pane -t plan-review-<worker>-<suffix> -p | tail -5`). When the process exits or output contains `## Verdict`, capture the full output, present it to the user, and return to Checkpoint 1 (Step 3) options.
