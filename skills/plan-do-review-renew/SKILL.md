@@ -26,9 +26,9 @@ Classify and tell the user:
 
 | Class | Criteria | Planning approach | Plan location |
 |-------|----------|-------------------|---------------|
-| **Small** | 1–3 files, single package, no API changes | `/omc-plan --direct` — skip interview, describe approach inline | Skip plan file — approach stated in Checkpoint 1 |
-| **Single-session** | Contained feature/fix within one package | `/omc-plan --interactive` — thorough interview before planning | `.omc/plans/` |
-| **Multi-session** | Cross-package, multi-phase, or architectural | `/omc-plan --interactive --consensus` — interview + planner/architect/critic loop | `docs/plans/<date>-<name>.md` + `.omc/plans/` |
+| **Small** | 1–3 files, single package, no API changes | `/omc-plan --direct` (omc-team claude) — skip interview, describe approach inline | Skip plan file — approach stated in Checkpoint 1 |
+| **Single-session** | Contained feature/fix within one package | `/omc-plan --interactive` (omc-team claude) — thorough interview before planning | `.omc/plans/` |
+| **Multi-session** | Cross-package, multi-phase, or architectural | `/omc-plan --interactive --consensus` (omc-team claude) — interview + planner/architect/critic loop | GitHub tracking issue + `.omc/plans/` |
 
 Present classification with reasoning. User can override class or planning approach.
 
@@ -99,9 +99,9 @@ Pass the design brief from Step 2 as context to `/omc-plan` so the planner doesn
 
 Run `/omc-plan` with flags determined by triage:
 
-- **Small:** `/omc-plan --direct` with the task description and assumption check. Go to Step 4 with the generated approach. Do NOT skip Steps 4–11 — worktree, test, commit, and checkpoints still apply.
-- **Single-session:** `/omc-plan --interactive` with the design brief as context — the planner should build on the design decisions already made, not restart the interview from scratch.
-- **Multi-session:** `/omc-plan --interactive --consensus` with the design brief as context — interview focuses on implementation details, then planner/architect/critic deliberation loop until agreement.
+- **Small:** `/omc-plan --direct` (omc-team claude) with the task description and assumption check. Go to Step 4 with the generated approach. Do NOT skip Steps 4–11 — worktree, test, commit, and checkpoints still apply.
+- **Single-session:** `/omc-plan --interactive` (omc-team claude) with the design brief as context — the planner should build on the design decisions already made, not restart the interview from scratch.
+- **Multi-session:** `/omc-plan --interactive --consensus` (omc-team claude) with the design brief as context — interview focuses on implementation details, then planner/architect/critic deliberation loop until agreement.
 
 **Offering consensus escalation:** For any class, if the task touches critical paths, has multiple viable approaches, or the user seems uncertain, ask:
 
@@ -119,7 +119,7 @@ Run `/omc-plan` with flags determined by triage:
 If the plan contains placeholders, send it back to `/omc-plan` with specific feedback on what needs to be concrete.
 
 **Multi-session only — produce both:**
-1. **Roadmap** → `docs/plans/<YYYY-MM-DD>-<name>.md` — full scope, phases, dependencies, acceptance criteria per phase
+1. **Tracking issue** → `gh issue create --title "<name>" --label "tracking" --body "<roadmap markdown>"` — full scope with task-list checkboxes (`- [ ]`) for each phase, dependencies, and acceptance criteria per phase
 2. **Session plan** → `.omc/plans/` — current phase only
 
 ## Step 4 — Checkpoint 1: Plan Review
@@ -139,7 +139,7 @@ Signpost before proceeding:
 
 Always use an isolated worktree unless the user explicitly says otherwise (e.g. "just do it here", "no worktree").
 
-Then: `EnterWorktree` → execute (direct for small tasks, `/team` for single/multi-session).
+Then: `EnterWorktree` → execute (direct for small tasks, `/team claude` for single/multi-session).
 
 ## Step 6 — Test
 
@@ -180,6 +180,14 @@ If there are multiple logical changes, use multiple commits. The branch should b
 
 > Branch: `<branch-name>` | Worktree: `<path>` | Changes committed, ready to push.
 
+**Recommend an option** based on task context:
+
+- Small task, tests pass, low risk → recommend **`push-mergesync`**
+- Medium complexity or touching shared code → recommend **`open-pr-review`** or **`open-pr-peer-review`**
+- Standard case → recommend **`open-pr`**
+
+Always state your recommendation with a one-line rationale before presenting options. User can always override.
+
 Present options:
 
 1. **`open-pr`** — push branch, open PR, enter check loop (Step 10) (default)
@@ -205,6 +213,15 @@ gh pr view <number> --json commits
 gh pr checks <number>
 ```
 
+**Recommend an option** based on current PR state:
+
+- Peer review ran, issues were fixed, checks pass → recommend **`mergesync`**
+- Open review comments or failing checks → recommend **`check-fix`** with summary of what needs attention
+- No reviews yet, checks still running → recommend **`check`** and wait
+- Review approved, no open threads → recommend **`mergesync`**
+
+Always state your recommendation with a one-line rationale before presenting options. User can always override.
+
 Present options:
 
 1. **`check`** — fetch PR state, report, re-present options
@@ -219,6 +236,13 @@ Repeat options 1 or 2 until user picks option 3, 4, or 5.
 
 > Worktree: `<path>` | PR: #`<number>` (merged or closed)
 
+**Proactive suggestion:** Before presenting options, assess context and recommend a next step with rationale:
+
+- **Multi-session with remaining phases** → recommend **New worktree**, present the next phase from the tracking issue, and offer to generate the session plan
+- **Multi-session, final phase just completed** → recommend **Stop + cleanup**, note that the project is complete, and suggest closing the tracking issue
+- **Standalone task, no follow-up** → recommend **Stop + cleanup**
+- **Visible follow-up work** (e.g. user mentioned it, or the change surfaced something) → recommend **Continue in worktree** or **New worktree** with rationale
+
 Present options:
 
 1. **Stop + cleanup** — `ExitWorktree`, sync, run `/clean_gone` to remove stale local branches. Done.
@@ -226,7 +250,6 @@ Present options:
 3. **New worktree** — `ExitWorktree`, sync, cleanup current worktree, create fresh one for next piece of work.
 
 **Multi-session only — before stopping:**
-1. Update roadmap in `docs/plans/` — mark phase complete, note scope changes
-2. Write `## Session Notes` in the roadmap: decisions made, approaches tried and rejected, surprising discoveries
-3. Generate next session plan from roadmap into `.omc/plans/`
-4. Present next session plan → loop to Step 4
+1. Update tracking issue: check off the completed phase checkbox (`gh issue edit`), add a session-notes comment (`gh issue comment`) covering decisions made, approaches tried and rejected, and surprising discoveries
+2. Generate next session plan from the tracking issue into `.omc/plans/`
+3. Present next session plan → loop to Step 4

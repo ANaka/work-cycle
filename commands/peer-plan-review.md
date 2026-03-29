@@ -10,7 +10,7 @@ Delegate plan review to an external worker in a separate tmux window (never the 
 
 If no plan path is given, find the most recent plan:
 1. Check `.omc/plans/` for the newest file
-2. Check `docs/plans/` for the newest file
+2. Check for a GitHub tracking issue (`gh issue list --label "tracking" --state open --limit 1`)
 3. If neither exists, ask the user for the path
 
 ## Choose Worker
@@ -19,7 +19,7 @@ Present numbered options:
 
 1. **`gemini`** — Gemini CLI
 2. **`codex`** — Codex CLI
-3. **`cursor`** — Cursor agent CLI
+3. **`cursor`** — Cursor agent CLI (default model: codex-5.3-high)
 4. **`claude`** — Claude CLI (separate session)
 
 If the user already specified a model in the arguments (e.g. `/peer-plan-review gemini`), skip the prompt.
@@ -41,7 +41,7 @@ tmux new-window -d -n "plan-review" "<cli> 'Review the plan at <plan-path>. Eval
 Output your review as a structured markdown summary with sections: Strengths, Concerns, Suggestions, and a Verdict (approve / request-changes).'"
 ```
 
-Where `<cli>` is `gemini`, `codex`, `claude`, or `agent -p --trust --force` for cursor.
+Where `<cli>` is `gemini`, `codex`, `claude`, or `agent -p --trust --force --model codex-5.3-high` for cursor.
 
 Tell the user: "Plan review spawned in tmux window `plan-review`. I'll poll for completion."
 
