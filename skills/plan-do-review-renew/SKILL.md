@@ -13,7 +13,27 @@ Brainstorm-plan-ship cycle with three explicit user checkpoints: plan review, PR
 
 **mergesync** — merge the PR (`gh pr merge --merge --delete-branch`), then sync. Always treated as one atomic operation. Note: `--delete-branch` deletes the remote branch; the local worktree and branch remain until explicitly cleaned up.
 
+## Workflow Tracking
+
+**Rule: update the workflow cursor before the first action of every new step.** This keeps your position visible even through deep execution phases and context compression.
+
+Use `notepad_write_priority` to maintain a live checklist. Format — use `[x]` done, `[>]` active, `[ ]` pending, `[-]` skipped:
+
+```
+WCYCLE: <task-summary> (<triage-class>)
+[>] 1-Triage  [ ] 2-Brainstorm  [ ] 3-Plan
+[ ] 4-CP:Plan [ ] 5-Execute     [ ] 6-Test
+[ ] 7-Docs    [ ] 8-Commit      [ ] 9-CP:PR
+[ ] 10-Check  [ ] 11-Continue
+```
+
+Add `br:<branch>`, `wt:<worktree-path>`, `pr:#<number>`, and `issue:#<number>` to the last line as they become available. Mark skipped steps `[-]` (e.g. small tasks may skip the plan file). For loops, append `(Rev N)` to the active step.
+
+**Multi-session only:** also use `state_write` at durable milestones (triage done, plan approved, worktree created, PR opened, PR merged, continuation chosen) to persist across sessions. Use whichever OMC mode is active (e.g. `ralph` if invoked via ralph, `autopilot` if via autopilot). Include these fields in the `state` object: `workflow` ("work_cycle"), `step`, `step_name`, `triage_class`, `branch`, `worktree_path`, `tracking_issue`, `pr_number`, `updated_at`.
+
 ## Step 1 — Triage
+
+**Initialize the workflow cursor now** — `notepad_write_priority` with the full checklist and `[>] 1-Triage` active. This is the most important write; all subsequent updates build on it.
 
 Quick scope assessment (~30 seconds of exploration):
 
@@ -133,6 +153,8 @@ Present the Step 2 output (assumption check for small tasks, or design brief for
 
 ## Step 5 — Execute
 
+**Update workflow cursor now** — `notepad_write_priority` with `[>] 5-Execute`. This is the deepest phase; the cursor keeps remaining steps visible.
+
 Signpost before proceeding:
 
 > Creating isolated worktree on branch `<branch-name>`. Your main worktree stays untouched. All changes happen there.
@@ -202,6 +224,8 @@ Present options:
 **Awaiting peer review (option 3):** after spawning the worker, poll PR comments every 30s for a `## Review Summary` comment. When found (or worker signals done via `SendMessage`), run a **check** and present Step 10 options.
 
 ## Step 10 — PR Open: Check Loop
+
+**Update workflow cursor now** — `notepad_write_priority` with `[>] 10-Check`. Update again on each loop iteration with current PR state (checks passing/failing, open comments).
 
 **"Check"** = fetch ALL of:
 
