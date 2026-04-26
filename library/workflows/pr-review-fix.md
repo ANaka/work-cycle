@@ -4,6 +4,14 @@ The PR Review Fix workflow is for review-and-repair work on an open pull
 request. The default posture is to fix actionable issues when a safe worktree is
 available. Comment-only mode is explicit.
 
+## Terms
+
+`sync` means update the local base branch after remote state changes.
+
+`mergesync` means merge the PR, delete or prune the remote branch when safe,
+then sync the local base branch and decide whether to remove or keep the local
+worktree.
+
 ## Inputs
 
 - PR number or URL, or a branch from which the PR can be inferred

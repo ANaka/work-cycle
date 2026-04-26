@@ -9,6 +9,10 @@ for compatibility. The new `library/`, `profiles/`, `adapters/`, and `docs/`
 folders describe the portable workflow model and the path toward Codex, Cursor,
 and standalone usage.
 
+Claude marketplace metadata still points at the repository root. The new
+top-level `library/`, `profiles/`, `adapters/`, and `docs/` folders are
+reference documentation only; they are not plugin discovery surfaces.
+
 ## Current Claude Install
 
 Add the marketplace and install the plugin from within Claude Code:
@@ -82,8 +86,8 @@ Profiles define how much external runtime support a workflow may assume.
 - [Superpowers Integrated](profiles/superpowers-integrated.md) - delegates
   generic software-engineering gates to installed Superpowers skills where the
   host agent supports them.
-- [OMC Optional](profiles/omc-optional.md) - uses oh-my-claudecode when present
-  but keeps Work Cycle semantics outside the OMC runtime.
+- [OMC Optional / Transition](profiles/omc-optional.md) - documents the path
+  from the current Claude/OMC implementation toward optional OMC use.
 
 Superpowers is a good dependency for workflow discipline when it is available.
 It should help execute phases; it should not replace the Work Cycle state
@@ -125,7 +129,13 @@ docs translate the workflow to each host.
 - [Third-party notices](docs/third-party-notices.md)
 - [Skill backlog](docs/skill-backlog.md)
 
+Use the authoring guide as the contribution guide until a dedicated
+`CONTRIBUTING.md` exists.
+
 ## The Cycle
+
+This diagram is a simplified view. The full state and transition contract lives
+in [Plan-Do-Review-Renew](library/workflows/plan-do-review-renew.md).
 
 ```mermaid
 graph TD

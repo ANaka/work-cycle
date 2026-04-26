@@ -1,5 +1,7 @@
 # Cursor Adapter
 
+**Status: Planned. No live Cursor rule files exist yet.**
+
 This is a planned adapter, not an installed Cursor rule set yet.
 
 ## Posture

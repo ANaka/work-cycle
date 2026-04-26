@@ -18,8 +18,11 @@ or adapters.
 
 - Keep root Claude plugin paths stable unless making a major compatibility
   change.
+- For any concrete implementation, name both the adapter and profile being used.
 - Do not call Codex or Cursor adapters installable until their files exist and
   have been validated.
+- Treat adapter READMEs as snapshots unless they explicitly say they are
+  generated from the portable library.
 - Keep Claude-only tool names out of portable library docs.
 - Add third-party attribution when copying substantial upstream text or code.
 - Prefer small adjacent skills over one larger workflow when the task is

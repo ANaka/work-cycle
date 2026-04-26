@@ -1,5 +1,7 @@
 # Codex Adapter
 
+**Status: Planned. No installable Codex plugin files exist yet.**
+
 This is a planned adapter, not an installable Codex plugin yet.
 
 ## Posture

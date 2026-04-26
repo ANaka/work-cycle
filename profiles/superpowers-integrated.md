@@ -14,6 +14,9 @@ debugging, verification, review, and branch finishing.
 
 ## Useful Superpowers Skills
 
+These names are accurate as of 2026-04. Re-check upstream before turning this
+profile into an installable adapter dependency.
+
 - `brainstorming`
 - `writing-plans`
 - `using-git-worktrees`

@@ -28,6 +28,19 @@ Adapters own:
 - install and packaging shape
 - artifact roots
 
+## Using The Library
+
+Pick one adapter and one profile for any concrete implementation. Examples:
+
+- Claude Code plus OMC Transition for the current root plugin.
+- Codex plus Standalone for a native Codex skill pass.
+- Codex plus Superpowers Integrated when installed Superpowers skills should
+  handle phase-level practices.
+- Cursor plus Standalone for project rules and paste-ready prompts.
+
+Adapters define host mechanics; profiles define dependency posture. A portable
+workflow should state both before it claims installable behavior.
+
 ## Workflows
 
 - [Plan-Do-Review-Renew](workflows/plan-do-review-renew.md)
@@ -35,6 +48,9 @@ Adapters own:
 - [Peer Review](workflows/peer-review.md)
 
 ## Concepts
+
+Concepts include vocabulary, invariants, and cross-cutting gates. Some, such as
+checkpoints, are state-gate policy rather than standalone workflows.
 
 - [Acceptance Ledger](concepts/acceptance-ledger.md)
 - [Checkpoints](concepts/checkpoints.md)

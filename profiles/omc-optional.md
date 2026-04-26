@@ -1,12 +1,14 @@
-# OMC Optional Profile
+# OMC Transition Profile
 
-Use this profile when oh-my-claudecode is available and helpful.
+Use this profile when oh-my-claudecode is available and helpful, or when moving
+Claude-only OMC assumptions toward optional adapter behavior.
 
 ## Dependency Posture
 
-OMC is an optional runtime and orchestration layer. It is not the portable
-foundation for Work Cycle. The portable library should not require OMC commands,
-state stores, HUDs, or worker runtimes.
+OMC is the current Claude implementation dependency for several root skill
+paths, but it should be an optional runtime and orchestration layer for the
+portable library. It is not the portable foundation for Work Cycle. The portable
+library should not require OMC commands, state stores, HUDs, or worker runtimes.
 
 ## Good Uses
 
@@ -27,4 +29,5 @@ state stores, HUDs, or worker runtimes.
 
 The root Claude plugin still references OMC surfaces. That is valid for the
 current Claude adapter and should be documented honestly until those references
-are replaced or wrapped.
+are replaced or wrapped. Until that cleanup lands, this profile describes the
+transition target, not the current root Claude plugin behavior.

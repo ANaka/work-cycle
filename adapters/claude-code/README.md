@@ -2,6 +2,10 @@
 
 The Claude Code adapter is the current stable implementation.
 
+This file is an orientation snapshot as of 2026-04. The root `skills/` and
+`commands/` files are the current behavior. Update this README when dependency,
+mapping, or compatibility claims change.
+
 ## Live Paths
 
 The live Claude plugin remains at the repository root:
