@@ -1,14 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "work-cycle",
-  "description": "Structured plan-to-ship development workflows with explicit checkpoints",
+  "description": "Claude plan-to-ship workflows; library and adapter docs are reference-only",
   "owner": {
     "name": "ANaka"
   },
   "plugins": [
     {
       "name": "work-cycle",
-      "description": "Structured plan-to-ship development workflows with explicit checkpoints",
+      "description": "Claude plan-to-ship workflows; library and adapter docs are reference-only",
       "version": "1.0.0",
       "author": {
         "name": "ANaka"
