@@ -21,8 +21,8 @@ To pick up changes without restarting, run `/reload-plugins`.
 
 ### Skills (auto-invoked by Claude)
 
-- **plan-do-review-renew** — Full cycle with explicit checkpoints: triage, brainstorm (assumption check for small tasks, full design exploration for larger ones), plan (via `/omc-plan`), execute (in isolated worktree), test, commit, PR, and merge. Inspired by [superpowers](https://github.com/obra/superpowers) brainstorming philosophy — examine assumptions before committing to an approach.
-- **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary.
+- **plan-do-review-renew** — Full cycle with explicit checkpoints and cross-cutting gates: triage with verification-tier selection, brainstorm (with `superpowers:brainstorming` invoked at Multi-session for HARD-GATE spec discipline; principles adopted inline at smaller tiers), acceptance-criteria ledger, plan (via `/omc-plan`) under a quality gate that absorbs `superpowers:writing-plans` rigor (bite-size tasks, exact paths, code-in-steps, type consistency), execute in isolated worktree, test, simplify (via `/oh-my-claudecode:ai-slop-cleaner`), doc check, final verify, commit, PR, merge. Includes a Debugging Gate (3-attempt cap with root-cause hypothesis required) and auto-suggests handoff prompts when context tightens or sessions break. All artifacts live under `.omc/` (specs in `.omc/plans/specs/`, plans in `.omc/plans/`) — no second tree.
+- **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary. Also responds to the `fixpr` shorthand.
 
 ### Commands (user-invoked)
 
@@ -37,19 +37,25 @@ To pick up changes without restarting, run `/reload-plugins`.
 
 ```mermaid
 graph TD
-    A[Triage] --> B[Brainstorm]
-    B --> C[Plan]
-    C --> D{Checkpoint 1\nApprove plan}
-    D --> E[Execute\nin worktree]
-    E --> F[Test]
-    F --> G[Commit]
-    G --> H{Checkpoint 2\nPR strategy}
-    H --> I[Review &\nFix loop]
-    I --> J{Checkpoint 3\nContinue?}
-    J -->|New task| A
-    J -->|Continue| D
-    J -->|Done| K[Cleanup]
+    A[Triage<br/>+ pick tier] --> B[Brainstorm<br/>+ AC ledger]
+    B --> C[Plan<br/>quality gate]
+    C --> D{CP1<br/>Approve plan}
+    D --> E[Execute<br/>in worktree]
+    E --> F[Test<br/>lock behavior]
+    F --> G[Simplify<br/>ai-slop-cleaner]
+    G --> H[Doc check]
+    H --> I[Final verify<br/>fresh evidence]
+    I --> J[Commit]
+    J --> K{CP2<br/>PR strategy}
+    K --> L[Check loop]
+    L --> M{CP3<br/>Continue?}
+    M -->|New task| A
+    M -->|Continue| D
+    M -->|Handoff| N[Handoff prompt]
+    M -->|Done| O[Cleanup]
 ```
+
+Cross-cutting throughout: **Verification Tiers** (Light/Standard/Thorough — auth/secrets/schemas never downgrade) and the **Debugging Gate** (3-attempt cap, root-cause hypothesis required before each fix).
 
 ## Dependencies
 
@@ -57,4 +63,5 @@ graph TD
 - `gh` CLI (for PR operations)
 - `git` with worktree support
 - `tmux` (for `/peer-pr-review` and `/peer-plan-review` worker spawning)
-- [oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) (for `/omc-plan` and `/team` referenced in the skills)
+- [oh-my-claudecode](https://github.com/anthropics/oh-my-claudecode) (for `/omc-plan`, `/team`, and `/oh-my-claudecode:ai-slop-cleaner` referenced in the skills)
+- [superpowers](https://github.com/obra/superpowers) (for `superpowers:brainstorming` invoked at Multi-session, with spec output redirected to `.omc/plans/specs/`)

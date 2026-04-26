@@ -1,6 +1,6 @@
 ---
 name: pr-review-fix
-description: Use when a PR is open and needs review. Fetches PR state, reviews the diff, fixes issues directly in the worktree, pushes, and comments on the PR about what was fixed. Can loop until clean.
+description: Use when a PR is open and needs review (including the shorthand "fixpr"). Fetches PR state, reviews the diff, fixes issues directly in the worktree, pushes, and comments on the PR about what was fixed. Can loop until clean.
 ---
 
 # PR Review Fix
@@ -14,6 +14,8 @@ Uses the same definitions as `plan-do-review-renew`:
 **sync** — sync local repo `main` to remote `main` (`git checkout main && git pull`). If continuing in a worktree, also sync the worktree's local `main` reference.
 
 **mergesync** — merge the PR (`gh pr merge --merge --delete-branch`), then sync. One atomic operation.
+
+**fixpr** — shorthand for this workflow. Treat user phrases like `fixpr`, `fix PR`, `review-fix-comment`, "fix this PR and comment", or "review this PR, push fixes, and leave comments" as invocations of this skill. Default mode is **fix**, not comment-only — switch to comment-only only when the user explicitly says "just review", "comment only", "don't push", or no safe worktree/branch is available.
 
 **check** — fetch ALL PR state:
 
