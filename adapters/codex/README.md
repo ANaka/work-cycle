@@ -43,7 +43,7 @@ Implementation order:
 1. Translate `plan-do-review-renew` into `skills/work-cycle/SKILL.md`.
 2. Translate `pr-review-fix` into `skills/pr-review-fix/SKILL.md`.
 3. Validate each skill draft before adding plugin packaging:
-   `python3 /home/naka/.codex/skills/.system/skill-creator/scripts/quick_validate.py <skill-dir>`.
+   `python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py <skill-dir>`.
 4. Add `.codex-plugin/plugin.json` only after the skills validate locally.
 5. Document install and update commands for the verified adapter.
 6. Keep the library contract and Codex adapter differences explicit.
