@@ -129,7 +129,7 @@ Adopts the discipline of `superpowers:brainstorming` inline — one question at 
 
 The all-classes Self-Review Checklist below covers placeholders, scope creep, ambiguity, and verification gaps before Step 3 — run it after the brief.
 
-If the user asks for a durable artifact ("save the spec", "commit the design"), write it to `.omc/plans/<task-slug>/design.md` and commit. Otherwise the brief lives in the conversation only.
+If the user asks for a durable artifact ("save the spec", "commit the design"), write it to `.omc/plans/<task-slug>/design.md` **inside the task worktree**. If no task worktree exists yet, run the Worktree Pre-Creation Safety checks from Step 5 first, create or enter the task worktree, and record `br:` / `wt:` in the cursor. Commit the artifact from that branch, never from an unisolated main checkout. Otherwise the brief lives in the conversation only.
 
 ### Multi-session: Deep Design Exploration
 
@@ -143,9 +143,14 @@ The brainstorming skill will run its standard flow: explore project context → 
 
 After the user approves the spec:
 
-1. Create the GitHub tracking issue with `gh issue create --label "tracking"`. The issue body should link to the spec file and contain the phase checklist (`- [ ]` per phase).
-2. Commit the spec file alongside the tracking-issue creation.
-3. Continue to Step 3 with the spec file path and tracking issue number captured in the workflow cursor.
+1. Ensure the spec lives inside the task worktree. If no task worktree exists yet, run the Worktree Pre-Creation Safety checks from Step 5 first, create or enter the task worktree, and record `br:` / `wt:` in the cursor.
+2. Create the GitHub tracking issue non-interactively:
+   ```bash
+   gh issue create --title "<topic> tracking" --label "tracking" --body-file <tracking-issue-body.md>
+   ```
+   The body file must link to the spec path and contain the phase checklist (`- [ ]` per phase), dependencies, and acceptance criteria.
+3. Commit the spec file from the task branch alongside any durable tracking-issue note.
+4. Continue to Step 3 with the spec file path, tracking issue number, branch, and worktree path captured in the workflow cursor.
 
 ### Acceptance Criteria Ledger
 
@@ -242,6 +247,8 @@ Signpost before proceeding:
 > Creating isolated worktree on branch `<branch-name>`. Your main worktree stays untouched. All changes happen there.
 
 Always use an isolated worktree unless the user explicitly says otherwise (e.g. "just do it here", "no worktree").
+
+If Step 2 already created a task worktree for a durable spec or design artifact, reuse it here: verify `git status --short`, confirm the branch/base, and continue execution there instead of creating a second worktree.
 
 ### Worktree Pre-Creation Safety
 
