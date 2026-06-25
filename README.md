@@ -23,6 +23,7 @@ To pick up changes without restarting, run `/reload-plugins`.
 
 - **plan-do-review-renew** — Full cycle with explicit checkpoints and cross-cutting gates: triage with verification-tier selection, brainstorm (with `superpowers:brainstorming` invoked at Multi-session for HARD-GATE spec discipline; principles adopted inline at smaller tiers), acceptance-criteria ledger, plan (via `/omc-plan`) under a quality gate that absorbs `superpowers:writing-plans` rigor (bite-size tasks, exact paths, code-in-steps, type consistency), execute in isolated worktree, test, simplify (via `/oh-my-claudecode:ai-slop-cleaner`), doc check, final verify, commit, PR, merge. Includes a Debugging Gate (3-attempt cap with root-cause hypothesis required) and auto-suggests handoff prompts when context tightens or sessions break. All artifacts live under `.omc/` (specs in `.omc/plans/specs/`, plans in `.omc/plans/`) — no second tree.
 - **pr-review-fix** — Review an open PR, fix issues directly in the worktree, push fixes, and comment with a structured summary. Also responds to the `fixpr` shorthand.
+- **deslop-review** — Strip AI slop from an open PR's diff with a regression-safe, deletion-first cleanup pass (duplication, dead code, needless abstraction, boundary leaks, weak tests), fix obvious bugs found along the way, push, comment a summary, then ask whether to mergesync. Self-contained (no `oh-my-claudecode` dependency). Also responds to the `deslop-pr` shorthand.
 
 ### Commands (user-invoked)
 
@@ -30,6 +31,7 @@ To pick up changes without restarting, run `/reload-plugins`.
 |---------|-------------|
 | `/work-cycle:plan-execute-review-renew` | Invoke the plan-do-review-renew skill |
 | `/work-cycle:review-pr` | Invoke pr-review-fix on a PR |
+| `/work-cycle:deslop-pr` | Invoke deslop-review on a PR |
 | `/work-cycle:peer-plan-review` | Delegate plan review to an external model (Gemini, Codex, Cursor, or Claude) |
 | `/work-cycle:peer-pr-review` | Delegate PR review to an external model (Gemini, Codex, Cursor, or Claude) |
 
